@@ -28,7 +28,7 @@
 430 gosub 20700
 440 on strig gosub 11100:strig(0) on
 450 LINE(0,0)-(256,15),11,b
-460 'on interval=50 gosub 9000:interval on:time=0
+460 on interval=50 gosub 9000:interval on:time=0
     500 gosub 20100
     510 gosub 600
     520 'nada'
@@ -40,7 +40,7 @@
 610 return
     6200 px=x:py=y 
     6210 on stick(0) gosub 6240,6210,6250,6210,6260,6210,6270
-    6220 if stick(0)=-1 then ps=0
+    6220 'if stick(0)=-1 then ps=0
 6230 return
 6240 y=y-pv:ps=4:return
 6250 x=x+pv:ps=0:return

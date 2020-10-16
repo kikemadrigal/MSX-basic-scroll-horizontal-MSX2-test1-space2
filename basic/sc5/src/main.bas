@@ -70,7 +70,7 @@
 440 on strig gosub 11100:strig(0) on
 1 'Dubamos un marco arriba para el HUD'
 450 LINE(0,0)-(256,15),11,b
-460 'on interval=50 gosub 9000:interval on:time=0
+460 on interval=50 gosub 9000:interval on:time=0
 
 
 
