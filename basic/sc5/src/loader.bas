@@ -6,7 +6,7 @@
 40 c=a and &b00001110
 1 'Si no es un MSX2+ vamos al final del programa'
 50 'if c <> 4 then print #1,"Lo siento pero tu MSX es un MSX2 y no puede ejecutar mi juego, necestas un MSX2+": goto 10000
-60 print #1,"Bien estas en un MSX2+!!!!"
+60 'print #1,"Bien estas en un MSX2+!!!!"
 
 
 
@@ -16,19 +16,18 @@
 90 'print #1,"Escribiendo main.bas en RAM"
 1 'cargamos la pantalla en la page 1 (32768)'
 100 BLOAD"tiles.bin",S,32768
-1 'Inicializacion de las dimensiones de los arrays de nuestras entidades'
-110 print #1,"Reservando espacio de arrays"
-120 gosub 3000
 1 'Cargamos el xbasic'
 150 print #1,"Cargando xbasic"
 160 bload"xbasic.bin",r
 200 print #1,"Cargando sprites"
 1 'Inicializamos los sprites'
 210 gosub 1000
-220 print #1,"Poniendo main en RAM"
+1 'Inicializacion de las dimensiones de los arrays de nuestras entidades'
+220 print #1,"Reservando espacio de arrays"
+230 gosub 3000
+240 print #1,"Poniendo main en RAM"
 1 'Cargamos el main'
-230 load "game.bas",r
-240 'goto 240
+250 load "game.bas",r
 
 
 
@@ -38,9 +37,9 @@
     1 'base(29)=30720-&h7800-sprite$(entero_numero) para tabla definición sprites (sd=tsprite definición)'
     1 ' 29696-&h7400 sprite color() para la tabla de definición de colores de sprites (sc= sprite tabla de colores)'
     1 'Leer datas 
-    1000 sa=base(28): sd=base(29):sc=&h7400
+    1000 'sa=base(28): sd=base(29):sc=&h7400
     1 'Vamos a cargar 6 sprites'
-    1010 for I=0 to 6:a$=""
+    1010 for I=0 to 9:a$=""
         1020 for J=1 to 32: read b$
             1030 a$=a$+chr$(VAL("&H"+b$))
             1 'Otra forma sería así pero abría que eliminar el sprite$(numero_sprite)'
@@ -49,9 +48,6 @@
         1060 SPRITE$(I)=a$
     1070 NEXT I
 
-    1 'REM Tapadera_sprites
- 
-    1140 REM space2
     1 'Nave espacial derecha 1
     1160 DATA 00,00,00,00,00,00,3E,E3
     1170 DATA 80,E1,3C,02,03,00,00,00
@@ -88,6 +84,23 @@
     1410 DATA 00,00,00,00,00,00,00,00
     1420 DATA 00,00,00,00,00,00,00,00
     1430 DATA 00,00,00,00,00,00,00,00
+    
+    1 'Tanque enemigo'
+    1440 DATA 00,00,00,00,00,00,00,01
+    1450 DATA 01,01,07,3F,3F,3F,3C,3C
+    1460 DATA 00,00,00,00,00,00,00,80
+    1470 DATA 80,80,F0,FC,FC,FC,3C,3C
+    1 'Nave enemiga derecha'
+    1480 DATA 00,00,07,1F,3F,7E,FC,F0
+    1490 DATA FC,F0,7C,3F,1F,07,00,00
+    1500 DATA 00,00,80,E0,80,00,00,00
+    1510 DATA 00,00,00,80,E0,80,00,00
+    1 'Nave enemiga izquierda'
+    1520 DATA 00,00,01,07,01,00,00,00
+    1530 DATA 00,00,00,01,07,01,00,00
+    1540 DATA 00,00,E0,F8,FC,7E,3F,0F
+    1550 DATA 3F,0F,3E,FC,F8,E0,00,00
+
     
     1 '2000 for I=0 to 5:a$=""
     1 '    2010 for J=1 to 16: read b$
@@ -149,18 +162,18 @@
 
 
 1 'Rutina reservar espacio para arrays'
-    1 'Definiendo el espacio para los arrays con los valores de los enemigos'
-    1 ' reservaremos el espacio en memoria para 5 enemigos'
-    1 'em=enemigo maximos'
+    1 'Definiendo el espacio para los arrays con los valores de los enemigos' 
+    1 'em=enemigos maximos'
+    1 'Para conecer las demás variables ir a la inicialización del enemigo'
     3000 em=5
-    1 ' Component position'
-    3010 DIM ex(em),ey(em),ep(em),ei(em)
+    1 '1 ' Component position'
+    3010 DIM ex(em),ey(em),ev(em),el(em),es(em),ep(em),ec(em),ee(em)
 
 
     1 ' Reservaremos el espacio en memoria para 5 disparos simultáneos'
     1 'dm=disparos maximos'
     3020 dm=5
-    3030 DIM dx(dm),dy(dm),dv(dm),da(dm),dc(dm),ds(dm),dp(dm)
+    3030 DIM dx(dm),dy(dm),dv(dm),ds(dm),dp(dm),da(dm)
 3900 return
 
 

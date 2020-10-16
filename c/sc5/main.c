@@ -11,17 +11,19 @@
 #include <stdio.h>
 // Para el memset
 #include <string.h>
+//itoa
+#include <stdlib.h>
 #include "player.h"
 
 
 
-void leerArchivoPantalla1();
-void leerArchivo(char *archivo);
+void leerMapaDeTiles();
+void leerArchivo();
 void FT_SetName( FCB *p_fcb, const char *p_name );
-void leerArchivo(char *archivo);
-void deRamAVramPage0(void);
+void recorreArrayConMapa(char *nombre);
+
 void deRamAVramPage1(void);
-void deVramAVramEdificios(void);
+void deVramAVramEBloquesArribaAbajo(void);
 void deVramAVramTodaLaPantalla(void);
 
 void inicializar_player(struct TPlayer*);
@@ -31,23 +33,32 @@ void procesar_entrada();
 
 
 
-FCB TFile; 
+FCB TFile;
+FCB TArchivo;
 unsigned char buffer_pantalla[30720];
-char file_name_pantalla_1[]="CITY.SC5";
+//3328 bytes, 256*13
+unsigned char buffer_archivo[3328];
+char file_name_pantalla_1[]="tiles.bin";
+char nombre_archivo[]="word0,bin";
+
 int contador1=0;
 int contador2=256;        
 
 void main(void){
   char c[]="Hola desde el espacio";
   SpriteReset();
-  
-  Screen(5);
-  SetBorderColor(13);
-  PutText(0,0,&c[0],0);
-  //leerArchivoPantalla1();
-  //deRamAVramPage0();
-  //deRamAVramPage1();
+    Screen(5);
 
+  //SetBorderColor(13);
+
+  leerMapaDeTiles();
+
+  deRamAVramPage1();
+  deVramAVramEBloquesArribaAbajo();
+  leerArchivo();
+  recorreArrayConMapa(&c[0]);
+  Screen(1);
+  PutText(10,10,"Holaaaaaaa2",0);
   //Sprite16();
  
   //inicializar_player(&player);
@@ -59,7 +70,8 @@ void main(void){
     __asm 
     halt
     __endasm;
-    deVramAVramEdificios();
+    //deVramAVramEBloquesArribaAbajo();
+    //deVramAVramEdificios();
     //deVramAVramTodaLaPantalla();
     procesar_entrada();
     actualizar_personaje(&player);
@@ -130,7 +142,7 @@ void procesar_entrada(){
 * *******************MAPA**********************************
 **********************************************************/
 
-void leerArchivoPantalla1(){
+void leerMapaDeTiles(){
     //Cargamos el archivo en la estructura
     FT_SetName( &TFile, &file_name_pantalla_1[0] );
     fcb_open( &TFile );
@@ -141,31 +153,27 @@ void leerArchivoPantalla1(){
     fcb_close( &TFile );
 }
 
-void leerArchivo(char *archivo){
-    FT_SetName( &TFile, archivo );
-    fcb_open( &TFile );
-    fcb_read( &TFile, &buffer_pantalla[0], 7 );  // Skip 7 first bytes of the file  
-    fcb_read( &TFile, &buffer_pantalla[0], 30720 );  // Read 20 lines of image data (128bytes per line in screen5)
-    fcb_close( &TFile );
+void leerArchivo(){
+    FT_SetName( &TArchivo, &nombre_archivo[0] );
+    fcb_open( &TArchivo );
+    fcb_read( &TArchivo, &buffer_archivo[0], 7 );  // Skip 7 first bytes of the file  
+    fcb_read( &TArchivo, &buffer_archivo[0], 3328 );  // Read 20 lines of image data (128bytes per line in screen5)
+    fcb_close( &TArchivo);
 }
-void deRamAVramPage0(void){
-  //Pasamos del a RAM (con un buffer) a la VRAM
-  //HMMC(&buffer_pantalla[0], posicion x,posición y,longitux de la zona a copiar,la altura de la zona a copiar ); 
-  HMMC(&buffer_pantalla[0], 0,0,256,212 ); 
-}
+
 void deRamAVramPage1(void){
   HMMC(&buffer_pantalla[0], 0,256,256,212 ); 
 }
 
-void deVramAVramEdificios(void){
-  contador1+=1;
-  contador2-=1;
-  //if(contador=0) contador=256;
+void deVramAVramEBloquesArribaAbajo(void){
+contador1+=1;
+  //contador2-=1;
+
   //HMMM(posicion x,posicion y (si es mayor que 256 es la page 1),destina x,destino y,anchura copia,altura copia);
-  HMMM(contador1,336,0,80,256,70);
-  HMMM(0,336,contador2,80,256,70);
-  if (contador1>255) contador1=0;
-  if (contador2<0) contador2=256;
+  HMMM(contador1,256,0,0,16*2,16);
+  //if (contador1>255) contador1=0;
+  //if (contador2<0) contador2=256;
+  
 }
 void deVramAVramTodaLaPantalla(void){
   contador1+=1;
@@ -177,16 +185,13 @@ void deVramAVramTodaLaPantalla(void){
   if (contador1>255) contador1=0;
   if (contador2<0) contador2=256;
 }
-/*
-void modificarBufferParaEfectoScroll(void){
-  for(int i=0; i<30720;i++){
-    if(i>10240 && i <20480){
-      buffer_pantalla[i]=buffer_pantalla[i+1];
-    }
-  }
-  HMMC(&buffer_pantalla[0], 0,0,0,0);
+void recorreArrayConMapa(char *nombre){
+   
+  //int tamanio=10;
+  //char tamanio_char[10];
+  //PutText(0,10,itoa (tamanio, &tamanio_char[0],10),0);
+  PutText(10,50,"holaaaa",0);
 }
-*/
 
 
 
