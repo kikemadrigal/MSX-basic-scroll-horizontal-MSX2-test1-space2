@@ -15,12 +15,15 @@
 #include <stdlib.h>
 #include "player.h"
 
+#include "fusion-c/header/io.h"
+
 
 
 void leerMapaDeTiles();
 void leerArchivo();
 void FT_SetName( FCB *p_fcb, const char *p_name );
-void recorreArrayConMapa(char *nombre);
+void cargar_filas();
+void recorreArrayConMapa();
 
 void deRamAVramPage1(void);
 void deVramAVramEBloquesArribaAbajo(void);
@@ -38,8 +41,12 @@ FCB TArchivo;
 unsigned char buffer_pantalla[30720];
 //3328 bytes, 256*13
 unsigned char buffer_archivo[3328];
+unsigned int fila1[511];
+unsigned int fila2[511];
+unsigned int fila3[511];
+unsigned int fila4[511];
 char file_name_pantalla_1[]="tiles.bin";
-char nombre_archivo[]="word0,bin";
+char nombre_archivo[]="word0.bin";
 
 int contador1=0;
 int contador2=256;        
@@ -49,32 +56,24 @@ void main(void){
   SpriteReset();
     Screen(5);
 
-  //SetBorderColor(13);
 
   leerMapaDeTiles();
 
   deRamAVramPage1();
   deVramAVramEBloquesArribaAbajo();
   leerArchivo();
-  recorreArrayConMapa(&c[0]);
-  Screen(1);
-  PutText(10,10,"Holaaaaaaa2",0);
+  cargar_filas();
+  recorreArrayConMapa();
+
+  //PutText(10,100,"Holaaaaaaa2",0);
   //Sprite16();
  
   //inicializar_player(&player);
 
 
   //Bucle render
-  while(true){
-    /**/
-    __asm 
-    halt
-    __endasm;
-    //deVramAVramEBloquesArribaAbajo();
-    //deVramAVramEdificios();
-    //deVramAVramTodaLaPantalla();
-    procesar_entrada();
-    actualizar_personaje(&player);
+  while(1){
+    recorreArrayConMapa();
   }
 
 }
@@ -185,12 +184,52 @@ void deVramAVramTodaLaPantalla(void){
   if (contador1>255) contador1=0;
   if (contador2<0) contador2=256;
 }
-void recorreArrayConMapa(char *nombre){
-   
-  //int tamanio=10;
-  //char tamanio_char[10];
-  //PutText(0,10,itoa (tamanio, &tamanio_char[0],10),0);
-  PutText(10,50,"holaaaa",0);
+void cargar_filas(){
+  int contador_fila1,contador_fila2,contador_fila3,contador_fila4;
+  contador_fila2=0;contador_fila3=0;contador_fila4=0;
+  for (int i=1; i<511;i++){
+    fila1[i]=buffer_archivo[i];
+  }
+  for (int i=511; i<1022;i++){
+    contador_fila2++;
+    fila2[contador_fila2]=buffer_archivo[i];
+  }
+    for (int i=1022; i<1533;i++){
+      contador_fila3++;
+    fila3[contador_fila3]=buffer_archivo[i];
+  }
+    for (int i=1533; i<2044;i++){
+      contador_fila4++;
+    fila4[contador_fila4]=buffer_archivo[i];
+  }
+}
+void recorreArrayConMapa(){
+ 
+    //t3=sizeof(buffer_archivo);
+    
+    
+    //Screen(0);
+    for (int i=1; i<511;i++){
+        Halt();
+        Halt();
+        Halt();
+        HMMM(fila1[i]*16,256, 256-16,0,16,16);
+        HMMM(fila2[i]*16,256, 256-16,16,16,16);
+        HMMM(fila3[i]*16,256, 256-16,16*2,16,16);
+        HMMM(fila4[i]*16,256, 256-16,16*3,16,16);
+        HMMM(16,0, 0,0,256,32);
+      
+      //printf(" %d ,",buffer_archivo[i]); 
+
+    }
+    //printf(" Gola");
+    //printf("Tamanioo archivo : %d",buffer_archivo[i]);   
+  // HMMC(&buffer_pantalla[0], posicion x,posición y,longitux de la zona a copiar,la altura de la zona a copiar ); 
+  //char nombre_archivo=itoa(sizeof(buffer_archivo), &tamanio_char[0],10);
+  //HMMC(nombre, 48,0,16,16 ); 
+  //Copia un rectangulo de VRAM a VRAM
+  //x,y, destino_x, destino_y, anhura y altura)
+
 }
 
 
