@@ -94,7 +94,7 @@ void main(void)
      Cls();
     
 
-    while(Inkey()!=27)
+    while(Inkey()!=27) 
     {
 
         a = JoystickRead(j);

@@ -16,8 +16,18 @@ SET LIBDIR=fusion-c\lib\
 SET proga=main
 
 
+REM Para unir 2 archivos hay que hacer esto
+rem archivo a unir
+rem sdcc -mz80 --no-std-crt0 -c pantalla.c
+rem copy pantalla.rel fusion-c\include\ /y
+rem del pantalla.asm
+rem del pantalla.lst
+rem del pantalla.sym
+rem del pantalla.rel
+REM Final de unir el archivo pantalla (falta la línea INC2que está 2 renglones más abajo)
+
 SET INC1=%INCLUDEDIR%crt0_msxdos.rel
-REM SET INC2=%INCLUDEDIR
+rem SET INC2=%INCLUDEDIR%pantalla.rel
 REM SET INC3=%INCLUDEDIR
 REM SET INC4=%INCLUDEDIR%
 REM SET INC5=%INCLUDEDIR%

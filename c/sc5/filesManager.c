@@ -1,4 +1,4 @@
-
+#include "fusion-c/header/msx_fusion.h"
 
 
 void FT_SetName( FCB *p_fcb, const char *p_name )  // Routine servant à vérifier le format du nom de fichier

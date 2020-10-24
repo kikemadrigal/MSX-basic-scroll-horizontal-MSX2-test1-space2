@@ -142,8 +142,8 @@
 1 ' ----------------------'
     1 'Render map'
     1 'Rutina desplazar pantalla a la izquierda
-    7000 gosub 21500
-    1 ' Obtenemos el tile deL array que toca (mc) y lo pintamos al final de la pantalla
+    7000 'gosub 21500
+    1 ' Rutina dibujar mapa
     7010 gosub 20700
     1 'Pintamos de nuevo el player con la posición
     7020 gosub 10500
@@ -366,50 +366,54 @@
 1 'Rutina dibujar mapa'
     1 'Obtenemos el tile deL array que toca (mc) y lo pintamos al final de la pantalla'
     20700 '_TURBO on (mc,m())
-    1 'Creamos un contador de columnas para que se vaya desplazando en el array'
+    1 'Copiamos las columnas a la ultima columna page 0'
     20710 mc=mc+1
-    1 'Le pondremos como máximo 31 columnas de ancho (recuerda que nuestra oantalla son 16 columnas de 16px por tile)'
     20720 if mc>255 then mc=0
-    1 'El t1 será los tiles de la 1 fila desde 0 hasta 16 px de alto'
-    20730 t1=m(mc,0)
-    1 'El t2 serán los tiles de la 2 fila de 16pz a 32 px'
-    20740 t2=m(mc,1)
-    1 't3 son los tiles de la 3 fila'
-    20750 t3=m(mc,2)
-    20760 t4=m(mc,3)
-
-    1 'fila 9'
-    20770 t5=m(mc,9)
-    1 'fila 10'
-    20780 t6=m(mc,10)
-    1 'fila 11'
-    20790 t7=m(mc,11)
-    1 'fila 12'
-    20800 t8=m(mc,12)
-    1 'Si te fijas en el mapa tan solo obtenemos el valor que hay en el mapa,
-    1 'este valor indica su posicón en el tileset o el dibujo que hemos pegado en la page 1 en el cargador
-    20810 copy (t1*16,0)-((t1*16)+16,(0*16)+16),1 to (15*16,1*16),0,pset
-    20820 copy (t2*16,0)-((t2*16)+16,(0*16)+16),1 to (15*16,2*16),0,pset
-    20830 copy (t3*16,0)-((t3*16)+16,(0*16)+16),1 to (15*16,3*16),0,pset
-    20840 copy (t4*16,0)-((t3*16)+16,(0*16)+16),1 to (15*16,4*16),0,pset
-
-    20850 copy (t5*16,0)-((t5*16)+16,(0*16)+16),1 to (15*16,9*16),0,pset
-    20860 copy (t6*16,0)-((t6*16)+16,(0*16)+16),1 to (15*16,10*16),0,pset
-    20870 copy (t7*16,0)-((t7*16)+16,(0*16)+16),1 to (15*16,11*16),0,pset
-    20880 copy (t8*16,0)-((t8*16)+16,(0*16)+16),1 to (15*16,12*16),0,pset
-
+    20730 if mc mod 16=0 then gosub 21000
+    20740 gosub 21500
     20900 '_TURBO off
 20990 return
 
+1 ' Rutina opiar columnas a la ultima columna page 0'
+    1 'El t1 será los tiles de la 1 fila desde 0 hasta 16 px de alto'
+    21000 t1=m(mc,0)
+    1 'El t2 serán los tiles de la 2 fila de 16pz a 32 px'
+    21030 t2=m(mc,1)
+    1 't3 son los tiles de la 3 fila'
+    21040 t3=m(mc,2)
+    21050 t4=m(mc,3)
+
+    1 'fila 9'
+    21060 t5=m(mc,9)
+    1 'fila 10'
+    21070 t6=m(mc,10)
+    1 'fila 11'
+    21080 t7=m(mc,11)
+    1 'fila 12'
+    21090 t8=m(mc,12)
+    1 'Si te fijas en el mapa tan solo obtenemos el valor que hay en el mapa,
+    1 'este valor indica su posicón en el tileset o el dibujo que hemos pegado en la page 1 en el cargador
+    21100 copy (t1*16,0)-((t1*16)+16,(0*16)+16),1 to (15*16,1*16),0,pset
+    21110 copy (t2*16,0)-((t2*16)+16,(0*16)+16),1 to (15*16,2*16),0,pset
+    21120 copy (t3*16,0)-((t3*16)+16,(0*16)+16),1 to (15*16,3*16),0,pset
+    21130 copy (t4*16,0)-((t3*16)+16,(0*16)+16),1 to (15*16,4*16),0,pset
+
+    21140 copy (t5*16,0)-((t5*16)+16,(0*16)+16),1 to (15*16,9*16),0,pset
+    21150 copy (t6*16,0)-((t6*16)+16,(0*16)+16),1 to (15*16,10*16),0,pset
+    21160 copy (t7*16,0)-((t7*16)+16,(0*16)+16),1 to (15*16,11*16),0,pset
+    21170 copy (t8*16,0)-((t8*16)+16,(0*16)+16),1 to (15*16,12*16),0,pset
+21190 return
+
 1 'Rutina desplazar pantalla a la izquierda
-    21500 _TURBO on
-    21530 copy (16,1*16)-(256,5*16),0 to (0,1*16),0,pset  
-    21540 copy (16,9*16)-(256,13*16),0 to (0,9*16),0,pset  
-    21590 _TURBO off
+    21500 '_TURBO on
+    21510 preset(100,100):print #1,"mc: "mc
+    21530 copy (2,1*16)-(254,5*16),0 to (0,1*16),0,pset  
+    21540 copy (2,9*16)-(254,13*16),0 to (0,9*16),0,pset  
+    21590 '_TURBO off
 21600 return
  
 1 'Mostrar lo que hay guardado en el array
-    21700 for f=0 to 1
+    21700 for f=0 to 12
     1 '' ahora leemos las columnas c
         21720 for c=0 to 255
             21730 print #1, m(c,f);
