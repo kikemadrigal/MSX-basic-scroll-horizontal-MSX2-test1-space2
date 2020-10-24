@@ -21,3 +21,5 @@ http://msx.tipolisto.es/webmsx/standalone/?disk=files/space2.dsk
 
 ### Juega
 http://msx.tipolisto.es/webmsx/standalone/?disk=files/space2c.dsk
+
+<img src=c/sc5/images/1.PNG width="500px" >
