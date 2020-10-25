@@ -1,22 +1,23 @@
-
-//Tenemos que hacer uso por las estructuras FCB y métodos de File_IO
-#include "fusion-c/header/msx_fusion.h"
-//Para los HMMC
-#include "fusion-c/header/vdp_graph2.h"
-#include "pantalla.h"
-// Para el memset
-#include <string.h>
-
-
-
-//i=0; modulo16=0; desplazamiento=0;
-
+/**************DECLARACIONES************/
+#ifndef __PANTALLA_H__
+#define __PANTALLA_H__
+//FUNCIONES
+//Cargar archivos en memoria RAM y VRAM
+void cargarTileSetEnRAM();
+void cargarTileMapEnRAM();
+//Esto es para asociar un archivo al struct de archivos
+void FT_SetName( FCB *p_fcb, const char *p_name );
+//Esto me lo he inventado, :)
+void cargarArrayFilasTileMap();
+void recorrerBufferTileMapYPintarPage1EnPage0();
+void deRamAVramPage1(void);
+void SetAdjust(signed char x, signed char y);
+void poner_columna_negra();
+//VARIABLES Y ARRAYS
 char fileNameTilseSet[]="tileset.sc5";
 char fileNameTileMap[]="word0.bin";
 FCB TFileTileSet;
 FCB TFileTileMap;
-
-
 //En screen5 cada byte define 2 colores, entonces 256px de ancho/2=128 bytes*212 filas=27136 bytes para definir una page
 //En el ejemplo de fusion c cada 20 líneas son 2560 bytes
 //30720
@@ -36,11 +37,14 @@ unsigned int fila11[256];
 unsigned int fila12[256];
 unsigned int i=0;
 unsigned int modulo16=0;
-unsigned int desplazamiento=0;
+//unsigned int desplazamiento=0;
+#endif
+/********FINAL DE DECLARAIONES***********/
 
 
 
 
+/**************DEFINICIONES************/
 void cargarTileSetEnRAM(){
     //Cargamos el archivo en la estructura
     FT_SetName( &TFileTileSet, &fileNameTilseSet[0] );
@@ -66,7 +70,6 @@ void deRamAVramPage1(void){
   //HMMM(buffer en RAM, posición_x, posición_Y (256 será la page 1), ancho copia, alto copia)
   HMMC(&bufferTileSet[0], 0,256,256,212 ); 
 }
-
 
 
 
@@ -132,22 +135,11 @@ void cargarArrayFilasTileMap(){
 
 
 void recorrerBufferTileMapYPintarPage1EnPage0(){
-  /*Halt();
-  Halt();
-  Halt();
-  Halt();
-  Halt();*/
-  i++;
-
-    //HMMM transfiere datos de VRAM a VRAM rápidamente
-    //El bufer solo lo utilizamos para obtener su valor y ver desde donde tenemos que copiar
-    //HMMM(16,256, 0,0,16,16);
-    //Screen(0);
-    //printf("Fila 1--> ");
-    //if(i<256){
+  //HMMM transfiere datos de VRAM a VRAM rápidamente
+  //El bufer solo lo utilizamos para obtener su valor y ver desde donde tenemos que copiar
   modulo16+=2;
   if (modulo16>256) modulo16=0;
-  if(modulo16 % 16==0 && i<256){
+  if(modulo16 % 16==0){
     i++;
     //Fila 0
     HMMM(fila1[i]*16,256,256-16,16*1,16,16);
@@ -170,9 +162,30 @@ void recorrerBufferTileMapYPintarPage1EnPage0(){
     //Fila 12
     HMMM(fila12[i]*16,256, 256-16,16*12,16,16);
   }
-  desplazamiento+=2;
-  if (desplazamiento>16) desplazamiento=0; 
+  //desplazamiento+=2;
+  //if (desplazamiento>16) desplazamiento=0; 
   HMMM(2,16, 0,16,256,64);
   HMMM(2,212-64, 0,212-64,256,64);
-  BoxFill(256,16,256,212,1,0);
+}
+
+void SetAdjust(signed char x, signed char y) // x and y must be between -7 and +6
+{
+    char vx,vy,value;
+    vx=x;
+    if (x<0)
+      vx=16+x;
+    vy=y;
+    if (y<0)
+      vy=16+y;
+    value = (vy<<4) | vx ;
+    Poke(0xFFF1,value);     // Reg 18 Save
+    VDPwrite(18,value);
+}
+
+void poner_columna_negra(){
+  
+  //for (int i=0; i<13; i++){
+    //PutSprite( 9, 36, 240,16*i, 1 );
+  //}
+  
 }

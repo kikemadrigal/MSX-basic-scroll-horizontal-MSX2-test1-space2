@@ -9,6 +9,8 @@
         "xutility": "c",
         "io.h": "c",
         "pantalla.h": "c",
-        "msx_fusion.h": "c"
+        "msx_fusion.h": "c",
+        "vdp_graph2.h": "c",
+        "enemies.h": "c"
     }
 }
