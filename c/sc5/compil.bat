@@ -57,7 +57,7 @@ Tools\Hex2bin\hex2bin -e com %proga%.ihx
 copy %proga%.com DSK\%proga%.com /y
 
 del %proga%.com
-del %proga%.asm
+rem del %proga%.asm
 del %proga%.ihx
 del %proga%.lk
 del %proga%.lst
